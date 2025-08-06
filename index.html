@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/entire.css">
+    <link rel="stylesheet" href="./styles/index.css">
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="content-wrapper">
+            <!-- 왼쪽 텍스트 -->
+            <div class="login-text">
+                <p><strong>장소가 아닌, <span class="highlight">길로</span>.</strong></p>
+                <p><span class="highlight">당신의 여정</span>을 시작해보세요.</p>
+            </div>
+
+            <!-- 오른쪽 로그인 카드 -->
+            <div class="login-card">
+                <h1>Service Name</h1>
+                <form>
+                    <label for="email">이메일</label>
+                    <input type="email" id="email" placeholder="이메일을 입력해주세요." required>
+
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" placeholder="비밀번호를 입력해주세요." required>
+
+                    <button type="submit" class="login-btn">로그인</button>
+
+                    <div class="options">
+                        <a href="#">비밀번호 변경</a>
+                    </div>
+
+                    <!-- 기존 hr 삭제하고 아래처럼 교체 -->
+                    <div class="divider"><span>혹은</span></div>
+
+                    <a href="./pages/signupPage.html" class="signup-btn">회원가입</a>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
