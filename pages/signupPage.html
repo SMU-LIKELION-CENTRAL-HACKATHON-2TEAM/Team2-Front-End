@@ -1,61 +1,67 @@
 <!DOCTYPE html>
 <html lang="ko">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>회원가입</title>
     <link rel="stylesheet" href="../styles/entire.css" />
     <link rel="stylesheet" href="../styles/signUp.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="main">
-        <div class="content-wrapper">
+      <div class="content-wrapper">
+        <!-- Step 1: 회원정보 입력 -->
+        <div class="signup-card step step-1">
+          <div class="card-header">
+            <button class="left-btn" id="backBtn" aria-label="뒤로가기">
+              <img src="../images/leftBtn.svg" alt="뒤로가기" />
+            </button>
 
-            <!-- Step 1: 회원정보 입력 -->
-            <div class="signup-card step step-1">
-                <div class="card-header">
-                    <button class="left-btn" aria-label="뒤로가기">
-                        <img src="../images/leftBtn.svg" alt="뒤로가기" />
-                    </button>
-
-                    <h2>회원정보</h2>
-                </div>
-                <form class="submitFrom">
-                    <label for="email">이메일</label>
-                    <input type="email" id="email" placeholder="이메일을 입력해주세요.">
-
-                    <label for="name">닉네임</label>
-                    <input type="text" id="name" placeholder="사용하실 이름을 입력해주세요.">
-
-                    <label for="password">비밀번호</label>
-                    <input type="password" id="password" placeholder="비밀번호를 입력해주세요.">
-
-                    <label for="confirm-password">비밀번호 확인</label>
-                    <input type="password" id="confirm-password" placeholder="비밀번호를 다시 입력해주세요.">
-
-                    <button type="submit" class="next-btn">다음</button>
-                </form>
+            <h2>회원정보</h2>
+          </div>
+          <form class="submitForm">
+            <div class="form-group">
+              <label for="email">이메일</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="이메일을 입력해주세요."
+              />
             </div>
 
-            <!-- Step 2: 추가 정보 입력 (예시) -->
-            <!-- Step 2: 추가 정보 입력 (예시) -->
-
-            <div class="signup-card step step-2 hidden">
-                <h2>추가 정보 입력</h2>
-                <form>
-                    <label for="phone">전화번호</label>
-                    <input type="tel" id="phone" placeholder="전화번호를 입력해주세요.">
-
-                    <button type="submit" class="submit-btn">제출</button>
-                </form>
+            <div class="form-group">
+              <label for="name">닉네임</label>
+              <input
+                type="text"
+                id="name"
+                placeholder="사용하실 이름을 입력해주세요."
+              />
             </div>
 
+            <div class="form-group">
+              <label for="password">비밀번호</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="비밀번호를 입력해주세요."
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="confirm-password">비밀번호 확인</label>
+              <input
+                type="password"
+                id="confirm-password"
+                placeholder="비밀번호를 다시 입력해주세요."
+              />
+            </div>
+          </form>
+          <button class="next-btn">다음</button>
         </div>
+      </div>
     </div>
 
     <script src="../scripts/signup.js"></script>
-</body>
-
+  </body>
 </html>
