@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이메일 인증</title>
+    <link rel="stylesheet" href="../styles/entire.css" />
+    <link rel="stylesheet" href="../styles/verifyEmail.css" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="content-wrapper">
+        <div class="signup-card">
+          <div class="card-header">
+            <button
+              type="button"
+              class="left-btn"
+              id="backBtn"
+              aria-label="뒤로가기"
+            >
+              <img src="../images/leftBtn.svg" alt="뒤로가기" />
+            </button>
+            <h2>이메일 인증</h2>
+          </div>
+
+          <form class="submitForm" id="verifyForm">
+            <p class="verify-desc">
+              다음으로 발송된 인증번호를 입력해주세요.<br />
+              <span class="verify-email" id="verifyEmail"></span>
+            </p>
+
+            <div class="form-group">
+              <label for="code">인증번호</label>
+              <input
+                id="code"
+                type="text"
+                inputmode="numeric"
+                maxlength="6"
+                placeholder="6자리 인증번호를 입력해주세요."
+              />
+            </div>
+
+            <a href="#" class="resend-link" id="resendCode"
+              >인증 메일 다시 보내기</a
+            >
+          </form>
+          <button type="submit" class="submit-btn" id="verifyNext" disabled>
+            다음
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/verifyEmail.js" defer></script>
+  </body>
+</html>
