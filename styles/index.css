@@ -29,18 +29,18 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-.login-card h1 {
-  color: #1e72e5;
-  margin-bottom: 24px;
-  text-align: center;
+.login-card img {
+  width: 300px;
+  height: 95px;
+  margin-bottom: 30px;
 }
 
 .login-card input {
   width: 100%;
   padding: 12px;
   margin: 8px 0 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  border: 0.8px solid #a6aab4;
+  border-radius: 8px;
 }
 
 .login-btn {
@@ -55,7 +55,7 @@
 }
 
 .signup-btn {
-  display: block; /* 블록 요소로 만들어 버튼처럼 */
+  display: block;
   width: 100%;
   margin-top: 20px;
   padding: 12px;
@@ -65,8 +65,8 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  text-align: center; /* 텍스트 가운데 정렬 */
-  text-decoration: none; /* 밑줄 제거 */
+  text-align: center;
+  text-decoration: none;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -99,7 +99,7 @@
 .divider::after {
   content: "";
   flex: 1;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 2px solid #d9dbe0;
 }
 
 .divider::before {
@@ -109,10 +109,6 @@
 .divider::after {
   margin-left: 12px;
 }
-
-/* -------------------- */
-/* 📱 반응형 레이아웃 설정 */
-/* -------------------- */
 
 @media (max-width: 1024px) {
   .content-wrapper {
