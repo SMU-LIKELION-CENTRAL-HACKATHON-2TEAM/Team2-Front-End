@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>회원가입</title>
+    <link rel="stylesheet" href="../styles/entire.css" />
+    <link rel="stylesheet" href="../styles/verifyEmail.css" />
+  </head>
+
+  <body>
+    <div class="main">
+      <div class="content-wrapper">
+        <div class="signup-card step step-complete">
+          <!-- 본문은 submitForm 레이아웃을 재사용해서 가운데 정렬 -->
+          <div class="submitForm complete-body">
+            <div class="complete-icon" aria-hidden="true">
+              <!-- 체크 아이콘 -->
+              <svg width="72" height="72" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="11" fill="#2A83D7"></circle>
+                <path
+                  d="M7 12.5l3 3 7-7"
+                  stroke="white"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+
+            <h2>회원가입 완료</h2>
+
+            <p class="complete-email" id="completeEmail"></p>
+            <p class="complete-desc">
+              다음의 이메일로 회원가입이 완료되었습니다.
+            </p>
+          </div>
+
+          <!-- 버튼은 카드 하단에 유지 -->
+          <button type="button" class="submit-btn" id="goLogin">
+            로그인하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 쿼리스트링으로 전달된 email 보여주기 (예: ?email=test@abc.com)
+      const params = new URLSearchParams(window.location.search);
+      const email = params.get("email") || "";
+      const emailEl = document.getElementById("completeEmail");
+      if (emailEl) emailEl.textContent = email;
+
+      // 로그인으로 이동
+      document.getElementById("goLogin")?.addEventListener("click", () => {
+        window.location.href = "../index.html";
+      });
+    </script>
+  </body>
+</html>
