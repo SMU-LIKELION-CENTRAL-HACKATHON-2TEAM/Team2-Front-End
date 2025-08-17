@@ -1,0 +1,360 @@
+:root {
+  --list-width: 40vh;
+  --detail-width: 40vh;
+  --gutter: 18px;
+
+  --detail-minvh: 100;
+  /* 팝업 최소 높이(% of viewport) */
+  --panel-alpha: 0.95;
+  /* 팝업 투명도 (0~1) */
+  --panel-blur: 8px;
+  /* 배경 흐림 */
+
+  --radius: 14px;
+  --blue: #1e88f7;
+  --text-muted: #6b7280;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR",
+    sans-serif;
+}
+
+body {
+  overflow: hidden;
+}
+
+/* 문서 스크롤 막음 */
+
+/* ====== Layout ====== */
+.app {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: var(--list-width) 1fr;
+  /* [Side | Map] */
+  position: relative;
+  /* 팝업 기준 */
+}
+
+.app > .side,
+.app > #map {
+  min-height: 0;
+}
+
+/* ====== Side ====== */
+.side {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  /* 위: 스크롤, 아래: 고정 푸터 */
+  border-right: 1px solid #eee;
+  background: #fff;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.side-scroll {
+  min-height: 0;
+  overflow: auto;
+}
+
+.side-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid #eef2f6;
+}
+
+.side-body {
+  padding: 10px 14px 0 14px;
+}
+
+.side-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #dde3ea;
+  border-radius: 999px;
+}
+
+#btnBookmark {
+  background: transparent;
+  /* ← 진한 회색 원 제거 */
+  color: #9aa3af;
+  /* 아이콘 색만 살짝 회색(원하면 바꾸기) */
+  border: 0;
+}
+
+#btnSettings {
+  background: transparent;
+  /* ← 진한 회색 원 제거 */
+  color: #9aa3af;
+  /* 아이콘 색만 살짝 회색(원하면 바꾸기) */
+  border: 0;
+}
+
+.btn-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 0;
+  display: grid;
+  place-items: center;
+  background: #cfd6df;
+  cursor: pointer;
+}
+
+.btn-circle.primary {
+  background: var(--blue);
+  color: #fff;
+}
+
+.btn-circle.bookmark-on {
+  background: #ffd54f;
+  color: #111;
+}
+
+.btn-gear {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+/* ====== Map ====== */
+#map {
+  grid-column: 2;
+  width: 100%;
+  height: 100%;
+}
+
+/* ====== Search in input ====== */
+.search-with-icon {
+  position: relative;
+}
+
+/* 인풋 박스: 두꺼운 파란 테두리 + 살짝 네모 */
+/* 검색 인풋: 항상 동일한 파란 테두리 */
+.search-with-icon input {
+  width: 100%;
+  height: 6vh;
+  padding: 0 44px 0 14px;
+  font-size: 24px;
+  font-weight: 700;
+  background: #fff;
+
+  /* 핵심 */
+  -webkit-appearance: none;
+  /* Safari/Chrome 기본 테마 제거 */
+  appearance: none;
+  border: 3px solid #2a83d7;
+  /* 스타일+두께+색을 명시 */
+  border-radius: 8px;
+  box-shadow: none;
+  /* 내부 하이라이트/그림자 제거 */
+  outline: none;
+}
+
+/* 포커스 시에도 같은 보더 컬러 유지(보더 외곽 글로우만 선택적으로) */
+.search-with-icon input:focus {
+  border-color: #2a83d7;
+  box-shadow: 0 0 0 3px rgba(42, 131, 215, 0.18);
+  /* 원치 않으면 지워도 OK */
+}
+
+.search-with-icon input::placeholder {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+.search-with-icon .search-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.search-with-icon .search-icon .icon-img {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* ====== Results ====== */
+.muted {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.list {
+  display: grid;
+  gap: 10px;
+}
+
+.result-card {
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius);
+  padding: 12px 14px 14px;
+  background: #fff;
+  display: grid;
+  gap: 10px;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+}
+
+.result-card:hover {
+  background: #f0f7ff;
+  border-color: #cfe3ff;
+  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.04);
+}
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  background: #e9edf2;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.open-txt {
+  margin-left: 8px;
+  font-weight: 500;
+  font-size: 12px;
+  color: #88d649;
+}
+
+/* 주소행 + 화살표(이미지) */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meta .sub {
+  flex: 1;
+  color: #a6aab4;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.chev {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 28px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  /* 동그라미 배경 */
+}
+
+.chev img {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+
+.aid-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #2a83d7;
+  font-size: 16px;
+}
+
+.aid-line::before {
+  content: "ⓘ";
+  color: #60a5fa;
+}
+
+/* ====== Detail Overlay ====== */
+.detail-pop {
+  position: fixed;
+  top: 12px;
+  left: calc(var(--list-width) + var(--gutter));
+  width: var(--detail-width);
+  min-height: min(calc(var(--detail-minvh) * 1vh), calc(100vh - 24px));
+  max-height: calc(100vh - 24px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(255, 255, 255, var(--panel-alpha));
+  backdrop-filter: saturate(1.05) blur(var(--panel-blur));
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  z-index: 5;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.app.details-open .detail-pop {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.detail-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: transparent;
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid rgba(240, 240, 240, 0.9);
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+}
+
+#detailBody {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 12px 14px;
+}
