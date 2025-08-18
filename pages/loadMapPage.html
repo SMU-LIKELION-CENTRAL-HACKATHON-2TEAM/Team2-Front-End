@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kakao Map Search</title>
+    <link rel="stylesheet" href="../styles/loadMap.css" />
+</head>
+
+<body>
+    <div class="app" id="app">
+        <!-- ===== LEFT: 사이드바 ===== -->
+        <aside class="side">
+            <div class="side-scroll">
+                <div class="side-head">
+                    <form id="searchForm" class="search-with-icon">
+                        <input id="query" placeholder="text" autocomplete="off" />
+                        <button type="submit" class="search-icon" aria-label="검색">
+                            <img src="/images/findIcon.svg" alt="" aria-hidden="true" class="icon-img">
+                        </button>
+                    </form>
+                    <div id="resultMeta" class="muted" style="margin-top:10px">
+                        검색 결과가 여기에 표시됩니다.
+                    </div>
+                </div>
+                <div class="side-body">
+                    <div id="results" class="list"></div>
+                </div>
+            </div>
+
+            <div class="side-footer">
+                <div class="pill">
+                    <button class="btn-circle primary" id="btnSearch" title="검색">
+                        <img src="/images/findIcon.svg" alt="">
+                    </button>
+                    <button class="btn-circle" id="btnBookmark" title="북마크 토글">
+                        <img src="/images/bookMark.svg" alt="">
+                    </button>
+                </div>
+                <button class="btn-gear" id="btnSettings" title="설정">
+                    <img src="/images/settingIcon.svg" alt="">
+                </button>
+            </div>
+        </aside>
+
+        <!-- ===== RIGHT: 지도 ===== -->
+        <div id="map"></div>
+
+        <!-- ===== OVERLAY: Detail ===== -->
+        <aside class="detail-pop" id="detailPanel" aria-live="polite">
+            <div class="detail-header">
+                <button class="icon-btn" id="detailBack" title="닫기">←</button>
+                <div>
+                    <div class="h" id="detailTitle" style="margin:0">Location Name</div>
+                    <div class="muted" id="detailAddr">주소가 여기에 표시됩니다</div>
+                </div>
+            </div>
+            <div id="detailBody" class="list"></div>
+        </aside>
+    </div>
+
+    <!-- Kakao Maps SDK: defer/async 절대 붙이지 말 것! -->
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=여기에 넣음 되요&libraries=services&autoload=false"></script>
+    <!-- 내 코드 (SDK 다음에) -->
+    <script src="../js/loadMap.js"></script>
+</body>
+
+</html>
