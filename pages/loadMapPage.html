@@ -1,69 +1,158 @@
 <!DOCTYPE html>
 <html lang="ko">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kakao Map Search</title>
     <link rel="stylesheet" href="../styles/loadMap.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="app" id="app">
-        <!-- ===== LEFT: 사이드바 ===== -->
-        <aside class="side">
-            <div class="side-scroll">
-                <div class="side-head">
-                    <form id="searchForm" class="search-with-icon">
-                        <input id="query" placeholder="text" autocomplete="off" />
-                        <button type="submit" class="search-icon" aria-label="검색">
-                            <img src="/images/findIcon.svg" alt="" aria-hidden="true" class="icon-img">
-                        </button>
-                    </form>
-                    <div id="resultMeta" class="muted" style="margin-top:10px">
-                        검색 결과가 여기에 표시됩니다.
-                    </div>
-                </div>
-                <div class="side-body">
-                    <div id="results" class="list"></div>
-                </div>
-            </div>
-
-            <div class="side-footer">
-                <div class="pill">
-                    <button class="btn-circle primary" id="btnSearch" title="검색">
-                        <img src="/images/findIcon.svg" alt="">
-                    </button>
-                    <button class="btn-circle" id="btnBookmark" title="북마크 토글">
-                        <img src="/images/bookMark.svg" alt="">
-                    </button>
-                </div>
-                <button class="btn-gear" id="btnSettings" title="설정">
-                    <img src="/images/settingIcon.svg" alt="">
+      <!-- ===== LEFT: 사이드바 ===== -->
+      <aside class="side">
+        <div class="side-scroll">
+          <!-- (1) 검색 패널 -->
+          <div id="panel-search" class="panel is-active">
+            <div class="side-head">
+              <form id="searchForm" class="search-with-icon">
+                <input id="query" placeholder="text" autocomplete="off" />
+                <button type="submit" class="search-icon" aria-label="검색">
+                  <img
+                    src="/images/findIcon.svg"
+                    alt=""
+                    aria-hidden="true"
+                    class="icon-img"
+                  />
                 </button>
+              </form>
+              <div id="resultMeta" class="muted" style="margin-top: 10px">
+                검색 결과가 여기에 표시됩니다.
+              </div>
             </div>
-        </aside>
+            <div class="side-body">
+              <!-- (A) 검색어 미입력 빈상태 -->
+              <div id="empty-no-input" class="empty-state hidden">
+                <img
+                  class="icon"
+                  src="/images/routeIcon.png"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <p class="title">
+                  시작 장소를 검색하여<br />원하는 루트를 찾아보세요.
+                </p>
+              </div>
 
-        <!-- ===== RIGHT: 지도 ===== -->
-        <div id="map"></div>
-
-        <!-- ===== OVERLAY: Detail ===== -->
-        <aside class="detail-pop" id="detailPanel" aria-live="polite">
-            <div class="detail-header">
-                <button class="icon-btn" id="detailBack" title="닫기">←</button>
-                <div>
-                    <div class="h" id="detailTitle" style="margin:0">Location Name</div>
-                    <div class="muted" id="detailAddr">주소가 여기에 표시됩니다</div>
-                </div>
+              <!-- (B) 결과 없음 빈상태 -->
+              <div id="empty-no-result" class="empty-state hidden">
+                <img
+                  class="icon"
+                  src="/images/emptyIcon.png"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <p class="title">
+                  검색 결과가 없습니다.<br />검색어를 다시 입력해주세요.
+                </p>
+              </div>
+              <!-- 기존 결과 리스트 (그대로 유지) -->
+              <div id="results" class="list"></div>
             </div>
-            <div id="detailBody" class="list"></div>
-        </aside>
+          </div>
+
+          <!-- (2) 북마크 패널 -->
+          <div id="panel-bookmark" class="panel">
+            <div class="side-head">
+              <form id="searchForm" class="search-with-icon">
+                <input id="query" placeholder="text" autocomplete="off" />
+                <button type="submit" class="search-icon" aria-label="검색">
+                  <img
+                    src="/images/findIcon.svg"
+                    alt=""
+                    aria-hidden="true"
+                    class="icon-img"
+                  />
+                </button>
+              </form>
+              <div id="resultMeta" class="muted" style="margin-top: 10px">
+                검색 결과가 여기에 표시됩니다.
+              </div>
+            </div>
+
+            <div class="side-body">
+              <!-- (C) 검색어 미입력 빈상태 -->
+              <div id="empty-no-result" class="empty-state hidden">
+                <img
+                  class="icon"
+                  src="/images/routeIcon.png"
+                  alt=""
+                  aria-hidden="true"
+                />
+                <p class="title">
+                  장소를 검색하여.<br />저장했던 루트를 찾아보세요.
+                </p>
+              </div>
+              <div id="bm-list" class="list" style="display: none"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-footer">
+          <label class="toggle">
+            <input type="checkbox" class="toggle__input" id="toggleSwitch" />
+            <span class="toggle__track">
+              <!-- 배경 아이콘 (회색으로 고정) -->
+              <span class="toggle__icon toggle__icon--left">
+                <img src="/images/findIcon.svg" alt="검색" />
+              </span>
+              <span class="toggle__icon toggle__icon--right">
+                <img src="/images/bookMark.svg" alt="북마크" />
+              </span>
+
+              <!-- 움직이는 thumb 안에 아이콘을 동적으로 바꿈 -->
+              <span class="toggle__thumb">
+                <img
+                  class="thumb-icon thumb-icon--search"
+                  src="/images/findIcon.svg"
+                  alt="검색"
+                />
+                <img
+                  class="thumb-icon thumb-icon--bookmark"
+                  src="/images/bookMark.svg"
+                  alt="북마크"
+                />
+              </span>
+            </span>
+          </label>
+
+          <button class="btn-gear" id="btnSettings" title="설정">
+            <img src="/images/settingIcon.svg" alt="" />
+          </button>
+        </div>
+      </aside>
+
+      <!-- ===== RIGHT: 지도 ===== -->
+      <div id="map"></div>
+
+      <!-- ===== OVERLAY: Detail ===== -->
+      <aside class="detail-pop" id="detailPanel" aria-live="polite">
+        <div class="detail-header">
+          <button class="icon-btn" id="detailBack" title="닫기">←</button>
+          <div>
+            <div class="h" id="detailTitle" style="margin: 0">
+              Location Name
+            </div>
+            <div class="muted" id="detailAddr">주소가 여기에 표시됩니다</div>
+          </div>
+        </div>
+        <div id="detailBody" class="list"></div>
+      </aside>
     </div>
 
     <!-- Kakao Maps SDK: defer/async 절대 붙이지 말 것! -->
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=여기에 넣음 되요&libraries=services&autoload=false"></script>
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6738c70e17749fde58007eca30b8f1ba&libraries=services&autoload=false"></script>
     <!-- 내 코드 (SDK 다음에) -->
     <script src="../js/loadMap.js"></script>
-</body>
-
+  </body>
 </html>

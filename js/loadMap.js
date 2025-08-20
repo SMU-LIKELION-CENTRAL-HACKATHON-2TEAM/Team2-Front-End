@@ -1,3 +1,5 @@
+//loadMap.js
+
 window.addEventListener("DOMContentLoaded", () => {
   // SDK가 로드된 뒤, maps 모듈을 초기화
   kakao.maps.load(() => {
@@ -8,10 +10,10 @@ window.addEventListener("DOMContentLoaded", () => {
     const btnSearch = document.getElementById("btnSearch");
     const btnBookmark = document.getElementById("btnBookmark");
     const btnBack = document.getElementById("detailBack");
+    const btnAdd = document.getElementById("detailAdd");
+    const detailPanel = document.getElementById("detailPanel");
     const detailTitle = document.getElementById("detailTitle");
-    const detailAddr = document.getElementById("detailAddr");
     const detailBody = document.getElementById("detailBody");
-
     const map = new kakao.maps.Map(document.getElementById("map"), {
       center: new kakao.maps.LatLng(37.5665, 126.978),
       level: 7,
@@ -34,11 +36,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function openDetail(place, pos) {
       detailTitle.textContent = place.place_name || "Location Name";
-      detailAddr.textContent =
-        place.road_address_name || place.address_name || "";
       detailBody.innerHTML = ""; // 필요 시 내용 채우기
       appEl.classList.add("details-open");
       if (pos) map.panTo(pos);
+      detailPanel.dataset.lat = place.y;
+      detailPanel.dataset.lng = place.x;
       setTimeout(() => btnBack.focus(), 0);
     }
 
@@ -138,5 +140,46 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // 초기 검색어
     doSearch("김치");
+
+    window.map = map;
+    window.dispatchEvent(new CustomEvent("map:ready", { detail: { map } }));
+  });
+
+  // 예) kakao.maps.load(() => { ... 여기서 map 생성 후 ... })
+  RouteGraph.init(map, MOCK_DATA.result, { limit: 5 }); // 상위 5개 라인 표시
+
+  btnAdd.addEventListener("click", () => {
+    const lat = parseFloat(detailPanel.dataset.lat);
+    const lng = parseFloat(detailPanel.dataset.lng);
+    if (isNaN(lat) || isNaN(lng)) return;
+
+    const pos = new kakao.maps.LatLng(lat, lng);
+    const marker = new kakao.maps.Marker({ position: pos, map, zIndex: 1 });
+    markers.push(marker);
+    map.panTo(pos);
   });
 });
+
+// DOM 요소 참조
+const toggleInput = document.getElementById("toggleSwitch");
+const panelSearch = document.getElementById("panel-search");
+const panelBookmark = document.getElementById("panel-bookmark");
+
+// 초기 상태 설정
+function updatePanelUI(isBookmark) {
+  if (isBookmark) {
+    panelSearch.classList.remove("is-active");
+    panelBookmark.classList.add("is-active");
+  } else {
+    panelBookmark.classList.remove("is-active");
+    panelSearch.classList.add("is-active");
+  }
+}
+
+// 이벤트 연결
+toggleInput.addEventListener("change", function () {
+  updatePanelUI(toggleInput.checked);
+});
+
+// 페이지 로드시 초기 상태 반영
+updatePanelUI(toggleInput.checked);
