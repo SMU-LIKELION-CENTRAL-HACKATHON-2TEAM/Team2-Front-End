@@ -8,16 +8,19 @@ window.addEventListener("DOMContentLoaded", () => {
     const btnSearch = document.getElementById("btnSearch");
     const btnBookmark = document.getElementById("btnBookmark");
     const btnBack = document.getElementById("detailBack");
+    const btnAdd = document.getElementById("detailAdd");
+    const detailPanel = document.getElementById("detailPanel");
     const detailTitle = document.getElementById("detailTitle");
-    const detailAddr = document.getElementById("detailAddr");
     const detailBody = document.getElementById("detailBody");
-
     const map = new kakao.maps.Map(document.getElementById("map"), {
       center: new kakao.maps.LatLng(37.5665, 126.978),
       level: 7,
     });
     const places = new kakao.maps.services.Places();
     const markers = [];
+
+    // [수정] RouteGraph 초기화: map 객체가 생성된 직후에 실행합니다.
+    RouteGraph.init(map);
 
     function clearResults() {
       markers.forEach((m) => m.setMap(null));
@@ -34,16 +37,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function openDetail(place, pos) {
       detailTitle.textContent = place.place_name || "Location Name";
-      detailAddr.textContent =
-        place.road_address_name || place.address_name || "";
       detailBody.innerHTML = ""; // 필요 시 내용 채우기
       appEl.classList.add("details-open");
       if (pos) map.panTo(pos);
+      detailPanel.dataset.lat = place.y;
+      detailPanel.dataset.lng = place.x;
       setTimeout(() => btnBack.focus(), 0);
     }
 
     function closeDetail() {
       appEl.classList.remove("details-open");
+      // [추가] 상세 패널을 닫을 때 지도에 그려진 모든 경로를 지웁니다.
+      RouteGraph.clearAll();
     }
 
     function createCard(p, pos) {
@@ -138,5 +143,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // 초기 검색어
     doSearch("김치");
+
+    window.map = map;
+    window.dispatchEvent(new CustomEvent("map:ready", { detail: { map } }));
+  });
+
+  btnAdd.addEventListener("click", () => {
+    const lat = parseFloat(detailPanel.dataset.lat);
+    const lng = parseFloat(detailPanel.dataset.lng);
+    if (isNaN(lat) || isNaN(lng)) return;
+
+    const pos = new kakao.maps.LatLng(lat, lng);
+    const marker = new kakao.maps.Marker({ position: pos, map, zIndex: 1 });
+    // markers 배열은 kakao.maps.load 콜백 스코프 안에 있으므로 직접 접근이 어렵습니다.
+    // 이 기능이 중요하다면 markers 배열을 전역으로 빼거나 다른 방식으로 관리해야 합니다.
+    map.panTo(pos);
   });
 });

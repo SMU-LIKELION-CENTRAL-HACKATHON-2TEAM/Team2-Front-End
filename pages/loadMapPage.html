@@ -48,22 +48,27 @@
         <div id="map"></div>
 
         <!-- ===== OVERLAY: Detail ===== -->
+        <!-- ===== OVERLAY: Detail ===== -->
         <aside class="detail-pop" id="detailPanel" aria-live="polite">
             <div class="detail-header">
-                <button class="icon-btn" id="detailBack" title="닫기">←</button>
-                <div>
-                    <div class="h" id="detailTitle" style="margin:0">Location Name</div>
-                    <div class="muted" id="detailAddr">주소가 여기에 표시됩니다</div>
-                </div>
+                <button class="icon-btn" id="detailBack" title="닫기" aria-label="뒤로">‹</button>
+                <div class="detail-title" id="detailTitle">Location Name</div>
+                <button class="icon-btn add" id="detailAdd" title="담기" aria-label="추가">＋</button>
             </div>
             <div id="detailBody" class="list"></div>
         </aside>
+
     </div>
 
     <!-- Kakao Maps SDK: defer/async 절대 붙이지 말 것! -->
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=여기에 넣음 되요&libraries=services&autoload=false"></script>
+    <script
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6738c70e17749fde58007eca30b8f1ba&libraries=services&autoload=false"></script>
     <!-- 내 코드 (SDK 다음에) -->
     <script src="../js/loadMap.js"></script>
+    <script src="../js/graph.js"></script>
+
+    <script src="../js/getRoute.js"></script>
+
 </body>
 
 </html>
