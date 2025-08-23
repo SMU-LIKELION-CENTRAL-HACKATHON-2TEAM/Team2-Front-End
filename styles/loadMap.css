@@ -410,17 +410,25 @@ body {
   padding: 10px 12px 8px;
   border-bottom: 1px solid rgba(240, 240, 240, 0.9);
   display: grid;
-  grid-template-columns: 36px 1fr;
+  grid-template-columns: 36px 1fr 36px;
   align-items: center;
   gap: 8px;
+}
+
+.detail-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 18px;
 }
 
 .icon-btn {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #ffffff;
   background: #fff;
+  color: #2a83d7;
+  font-weight: 1000;
   cursor: pointer;
 }
 
