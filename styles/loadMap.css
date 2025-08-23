@@ -75,6 +75,39 @@ body {
 
 .side-body {
   padding: 10px 14px 0 14px;
+  position: relative;
+  display: flex;
+  justify-content: center; /* 기본: 가로 중앙 */
+  align-items: center; /* 기본: 세로 중앙 (빈 상태용) */
+  flex: 1;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  min-height: 420px; /* 카드 높이에 맞춰 조절 */
+  color: #6b7280; /* muted */
+  text-align: center;
+  gap: 14px;
+}
+
+.empty-state .icon {
+  width: 96px;
+  height: 96px;
+  opacity: 0.9;
+}
+
+.empty-state .title {
+  font-size: 14px;
+  line-height: 150%;
+  color: #2a83d7;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .side-footer {
@@ -87,59 +120,98 @@ body {
   background: #fff;
 }
 
-.pill {
+.toggle {
+  display: inline-block;
+  position: relative;
+}
+
+.toggle__input {
+  display: none;
+}
+
+.toggle__track {
+  width: 100px;
+  height: 50px;
+  background-color: #e0e0e0;
+  border-radius: 50px;
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #dde3ea;
-  border-radius: 999px;
+  justify-content: space-between;
+  padding: 0 6;
+  box-sizing: border-box;
+  overflow: hidden; /* overflow 막기 */
 }
 
-#btnBookmark {
-  background: transparent;
-  /* ← 진한 회색 원 제거 */
-  color: #9aa3af;
-  /* 아이콘 색만 살짝 회색(원하면 바꾸기) */
-  border: 0;
+/* 회색 아이콘 (배경용) */
+.toggle__icon {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#btnSettings {
-  background: transparent;
-  /* ← 진한 회색 원 제거 */
-  color: #9aa3af;
-  /* 아이콘 색만 살짝 회색(원하면 바꾸기) */
-  border: 0;
+.toggle__icon img {
+  opacity: 0.5;
+  filter: grayscale(1);
 }
 
-.btn-circle {
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  border: 0;
-  display: grid;
-  place-items: center;
-  background: #cfd6df;
-  cursor: pointer;
+.toggle__thumb {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 2px;
+  background-color: #1e88f7;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.btn-circle.primary {
-  background: var(--blue);
-  color: #fff;
+/* thumb 안의 아이콘 2개 중 하나만 표시 */
+.thumb-icon {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  filter: brightness(0) invert(1); /* 흰색 아이콘 */
 }
 
-.btn-circle.bookmark-on {
-  background: #ffd54f;
-  color: #111;
+.thumb-icon--search {
+  opacity: 1;
+}
+
+.toggle__input:checked + .toggle__track .toggle__thumb {
+  transform: translateX(50px);
+}
+
+/* 체크되었을 때 thumb 안의 아이콘 바꾸기 */
+.toggle__input:checked + .toggle__track .thumb-icon--search {
+  opacity: 0;
+}
+.toggle__input:checked + .toggle__track .thumb-icon--bookmark {
+  opacity: 1;
 }
 
 .btn-gear {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 0;
-  display: grid;
-  place-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
   cursor: pointer;
+}
+
+/* 패널 스위치 */
+.panel {
+  display: none;
+}
+.panel.is-active {
+  display: block;
 }
 
 /* ====== Map ====== */

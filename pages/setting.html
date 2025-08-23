@@ -1,0 +1,84 @@
+<div id="settingsOverlay" class="overlay" hidden aria-hidden="true"></div>
+
+<section
+  id="settingsDialog"
+  class="modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="설정 - 프로필"
+  hidden
+  tabindex="-1"
+>
+  <header class="modal-header">
+    <button type="button" class="left-btn" id="backBtn" aria-label="뒤로가기">
+      <img src="../images/leftBtn.svg" alt="뒤로가기" />
+    </button>
+
+    <div class="seg" aria-label="설정 탭">
+      <button
+        class="seg-btn active"
+        type="button"
+        id="tabProfile"
+        aria-label="프로필"
+      >
+        <img src="/images/account.png" alt="" aria-hidden="true" />
+        <span class="seg-label">프로필</span>
+      </button>
+
+      <button
+        class="seg-btn"
+        type="button"
+        id="tabSaved"
+        aria-label="활동 내역"
+      >
+        <img src="/images/history.png" alt="" aria-hidden="true" />
+        <span class="seg-label">활동 내역</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="modal-body">
+    <div id="panelProfile" class="panel">
+      <div class="avatar">
+        <input id="avatarInput" type="file" accept="image/*" hidden />
+        <button
+          id="avatarBtn"
+          class="avatar-circle"
+          type="button"
+          aria-label="프로필 이미지 변경"
+        ></button>
+      </div>
+
+      <form id="settingsForm" class="form">
+        <label class="label" for="nickname">텍스트</label>
+        <input id="nickname" class="input view-mode" placeholder="" readonly />
+
+        <label class="label" for="email">이메일</label>
+        <input
+          id="email"
+          class="input view-mode"
+          value="user@example.com"
+          readonly
+        />
+
+        <button id="saveBtn" class="btn-primary" type="submit">
+          변경사항 저장
+        </button>
+      </form>
+    </div>
+
+    <div id="panelSaved" class="panel" hidden>
+      <div id="savedGrid" class="panel-saved">
+        <section class="saved-section">
+          <h3 class="saved-section__title">저장한 루트</h3>
+          <div id="savedRoutesRow" class="saved-row"></div>
+        </section>
+
+        <section class="saved-section">
+          <h3 class="saved-section__title">내가 남긴 후기</h3>
+          <div id="myReviewsRow" class="saved-row"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
