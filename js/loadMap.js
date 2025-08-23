@@ -1,6 +1,9 @@
 window.addEventListener("DOMContentLoaded", () => {
   // SDK가 로드된 뒤, maps 모듈을 초기화
   kakao.maps.load(() => {
+    // [추가] 배포된 백엔드 서버의 주소를 입력하세요.
+    const BACKEND_API_URL = "https://내-백엔드-주소.vercel.app";
+
     const appEl = document.getElementById("app");
     const resultsEl = document.getElementById("results");
     const resultMeta = document.getElementById("resultMeta");
@@ -19,7 +22,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const places = new kakao.maps.services.Places();
     const markers = [];
 
-    // [수정] RouteGraph 초기화: map 객체가 생성된 직후에 실행합니다.
     RouteGraph.init(map);
 
     function clearResults() {
@@ -36,30 +38,34 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     function openDetail(place, pos) {
-      detailTitle.textContent = place.place_name || "Location Name";
-      detailBody.innerHTML = ""; // 필요 시 내용 채우기
-      appEl.classList.add("details-open");
-      if (pos) map.panTo(pos);
-      detailPanel.dataset.lat = place.y;
-      detailPanel.dataset.lng = place.x;
-      setTimeout(() => btnBack.focus(), 0);
+      // openDetailWithDummy 함수가 있으므로, 이 함수는 검색 결과 클릭 시
+      // 상세 패널을 여는 대신 getRoute.js의 함수를 호출하도록 변경할 수 있습니다.
+      // 여기서는 getRoute.js의 openDetailWithDummy를 직접 호출하는 것을 권장합니다.
+      openDetailWithDummy(place.place_name); // getRoute.js에 정의된 함수 호출
+
+      // 아래는 기존 로직 백업
+      // detailTitle.textContent = place.place_name || "Location Name";
+      // appEl.classList.add("details-open");
+      // if (pos) map.panTo(pos);
     }
 
     function closeDetail() {
       appEl.classList.remove("details-open");
-      // [추가] 상세 패널을 닫을 때 지도에 그려진 모든 경로를 지웁니다.
       RouteGraph.clearAll();
     }
 
-    function createCard(p, pos) {
+    // [수정] 백엔드에서 이미지 URL을 비동기로 가져오도록 함수 변경
+    async function createCard(p, pos) {
       const cat =
         (p.category_name || "").split(">").pop()?.trim() || "Category";
       const addr = p.road_address_name || p.address_name || "";
 
       const card = document.createElement("div");
       card.className = "result-card";
+
+      // 일단 UI 뼈대만 먼저 생성
       card.innerHTML = `
-        <div class="thumb"></div>
+        <div class="thumb" style="background-color: #e5e7eb;"></div>
         <div class="title">${p.place_name}<span class="open-txt">Open</span></div>
         <div class="meta">
           <div class="sub">${cat} – ${addr}</div>
@@ -69,6 +75,23 @@ window.addEventListener("DOMContentLoaded", () => {
         </div>
         <div class="aid-line">AI description</div>
       `;
+
+      // 이미지를 가져오는 동안 다른 UI가 먼저 표시되도록 비동기 처리
+      try {
+        const response = await fetch(
+          `${BACKEND_API_URL}/api/photo?placeName=${encodeURIComponent(
+            p.place_name
+          )}`
+        );
+        const data = await response.json();
+        if (data.imageUrl) {
+          const thumbDiv = card.querySelector(".thumb");
+          thumbDiv.style.backgroundImage = `url('${data.imageUrl}')`;
+        }
+      } catch (error) {
+        console.error("사진을 불러오지 못했습니다:", p.place_name, error);
+      }
+
       card.addEventListener("click", () => openDetail(p, pos));
       return card;
     }
@@ -80,13 +103,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const positions = [];
       let total = 0;
-      const frag = document.createDocumentFragment();
 
       const handle = (data, status, pagination) => {
         if (status !== kakao.maps.services.Status.OK) {
           if (total === 0) resultMeta.textContent = "검색 결과가 없습니다.";
           return;
         }
+
+        const frag = document.createDocumentFragment();
+        // [수정] createCard가 비동기 함수가 되었으므로 Promise 배열로 처리
+        const cardPromises = [];
 
         data.forEach((p) => {
           total += 1;
@@ -99,33 +125,43 @@ window.addEventListener("DOMContentLoaded", () => {
             zIndex: 1,
           });
           markers.push(marker);
+          // kakao.maps.event.addListener(marker, "click", () => openDetail(p, pos));
+          // getRoute.js의 openDetailWithDummy를 사용하므로 마커 클릭 이벤트도 통일
           kakao.maps.event.addListener(marker, "click", () =>
-            openDetail(p, pos)
+            openDetailWithDummy(p.place_name)
           );
 
-          frag.appendChild(createCard(p, pos));
+          // Promise를 배열에 추가
+          cardPromises.push(createCard(p, pos));
         });
 
-        resultsEl.appendChild(frag);
-        resultMeta.textContent = `${total}개 로딩 중…`;
+        // 모든 카드가 생성될 때까지 기다렸다가 DOM에 추가
+        Promise.all(cardPromises).then((cards) => {
+          cards.forEach((card) => frag.appendChild(card));
+          resultsEl.appendChild(frag);
 
-        const hasNext =
-          pagination &&
-          ((pagination.hasNextPage &&
-            typeof pagination.nextPage === "function") ||
-            (pagination.current &&
-              pagination.last &&
-              pagination.current < pagination.last &&
-              typeof pagination.gotoPage === "function"));
+          // DOM 업데이트 후 나머지 로직 처리
+          resultMeta.textContent = `${total}개 로딩 중…`;
 
-        if (hasNext) {
-          if (typeof pagination.nextPage === "function") pagination.nextPage();
-          else pagination.gotoPage(pagination.current + 1);
-          return;
-        }
+          const hasNext =
+            pagination &&
+            ((pagination.hasNextPage &&
+              typeof pagination.nextPage === "function") ||
+              (pagination.current &&
+                pagination.last &&
+                pagination.current < pagination.last &&
+                typeof pagination.gotoPage === "function"));
 
-        resultMeta.textContent = `${total}개의 검색 결과`;
-        fitBounds(positions);
+          if (hasNext) {
+            if (typeof pagination.nextPage === "function")
+              pagination.nextPage();
+            else pagination.gotoPage(pagination.current + 1);
+            return;
+          }
+
+          resultMeta.textContent = `${total}개의 검색 결과`;
+          fitBounds(positions);
+        });
       };
 
       places.keywordSearch(q, handle, { location: map.getCenter(), page: 1 });
@@ -142,21 +178,25 @@ window.addEventListener("DOMContentLoaded", () => {
     btnBack.addEventListener("click", closeDetail);
 
     // 초기 검색어
-    doSearch("김치");
+    doSearch("보성 녹차밭");
 
     window.map = map;
     window.dispatchEvent(new CustomEvent("map:ready", { detail: { map } }));
   });
 
+  // 이 부분은 kakao.maps.load 콜백 밖에서도 유효해야 합니다.
+  const detailPanel = document.getElementById("detailPanel");
+  const btnAdd = document.getElementById("detailAdd");
   btnAdd.addEventListener("click", () => {
     const lat = parseFloat(detailPanel.dataset.lat);
     const lng = parseFloat(detailPanel.dataset.lng);
     if (isNaN(lat) || isNaN(lng)) return;
 
-    const pos = new kakao.maps.LatLng(lat, lng);
-    const marker = new kakao.maps.Marker({ position: pos, map, zIndex: 1 });
-    // markers 배열은 kakao.maps.load 콜백 스코프 안에 있으므로 직접 접근이 어렵습니다.
-    // 이 기능이 중요하다면 markers 배열을 전역으로 빼거나 다른 방식으로 관리해야 합니다.
-    map.panTo(pos);
+    // map 객체는 window를 통해 접근 가능
+    if (window.map) {
+      const pos = new kakao.maps.LatLng(lat, lng);
+      new kakao.maps.Marker({ position: pos, map: window.map, zIndex: 1 });
+      window.map.panTo(pos);
+    }
   });
 });

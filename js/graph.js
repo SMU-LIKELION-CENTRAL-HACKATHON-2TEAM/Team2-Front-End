@@ -146,6 +146,38 @@ const RouteGraph = (() => {
     _map.setBounds(bounds);
   }
 
+  // graph.js 파일 맨 아래에 이 코드를 추가하세요.
+
+  // 이전에 강조 표시된 파란색 선을 저장할 변수
+  let highlightedPolyline = null;
+
+  // 'route:highlight' 신호를 받으면 지도에 파란색 선을 그리는 리스너
+  window.addEventListener("route:highlight", (event) => {
+    const route = event.detail.route;
+    if (!route) return;
+
+    // 1. 이전에 그려진 파란색 선이 있다면 지도에서 제거
+    if (highlightedPolyline) {
+      highlightedPolyline.setMap(null);
+    }
+
+    // 2. 경로의 좌표 배열 생성
+    const places = [route.startPlace, ...route.nextPlaces];
+    const path = places.map((p) => new kakao.maps.LatLng(p.lat, p.lng));
+
+    // 3. 파란색으로 폴리라인(선) 생성
+    highlightedPolyline = new kakao.maps.Polyline({
+      path: path,
+      strokeWeight: 6, // 선 두께
+      strokeColor: "#1E88F7", // 파란색
+      strokeOpacity: 1,
+      strokeStyle: "solid",
+    });
+
+    // 4. 지도에 파란색 선 표시 (⚠️ 'map' 변수는 실제 카카오맵 객체여야 합니다)
+    highlightedPolyline.setMap(map);
+  });
+
   return {
     init,
     drawRoutes,
