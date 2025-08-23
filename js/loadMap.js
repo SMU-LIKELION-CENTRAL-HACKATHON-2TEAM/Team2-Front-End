@@ -178,7 +178,7 @@ window.addEventListener("DOMContentLoaded", () => {
     btnBack.addEventListener("click", closeDetail);
 
     // 초기 검색어
-    doSearch("보성 녹차밭");
+    doSearch("경복궁");
 
     window.map = map;
     window.dispatchEvent(new CustomEvent("map:ready", { detail: { map } }));
