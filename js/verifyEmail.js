@@ -59,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   };
 
-  // ===== fetch helpers =====
   async function postJSON(url, body) {
     const res = await fetch(url, {
       method: "POST",
@@ -109,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return data;
   }
 
-  // ===== resend cooldown =====
   function updateResendText() {
     if (!resendLink) return;
     resendLink.textContent = `인증 메일 다시 보내기${
@@ -146,7 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (remain > 0) startCooldown(remain);
   }
 
-  // ===== send code (GET) =====
   async function sendCode(email) {
     if (!isEmail(email)) {
       showBanner("올바른 이메일이 아닙니다.");
@@ -178,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===== signup (pre-validate + 호환 키 동시 전송) =====
+
   async function signupAfterVerify(email) {
     const nickname = (sessionStorage.getItem("signupNickname") || "").trim();
     const password = (sessionStorage.getItem("signupPassword") || "").trim();
@@ -191,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // (추정) 서버 정책에 맞춘 사전 검증 – 실패 원인 바로 안내
+
     const nickRe = /^[a-zA-Z0-9_]{3,12}$/;
     const pwRe =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$/;
@@ -213,12 +210,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // 스웨거 키 + 호환 키(passwordConfirm) 동시 전송
     const payload = {
       email: email.trim(),
       password,
-      confirmPassword, // Swagger 문서 상 키
-      passwordConfirm: confirmPassword, // 혹시 백엔드가 이 키를 읽는 경우 대비
+      confirmPassword,
+      passwordConfirm: confirmPassword, 
       nickname,
     };
     console.log("[signup payload]", payload);
@@ -234,7 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await postJSON(SIGNUP_URL, payload);
 
       if (res?.isSuccess === false) {
-        // 서버가 상세 사유를 숨기는 경우가 있어 프론트 안내 유지
+   
         showBanner(res?.message || "회원가입에 실패했습니다.");
         if (verifyNextBtn && keep) {
           verifyNextBtn.textContent = keep;
@@ -261,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===== verify → signup =====
+
   async function verifyThenSignup(email, code) {
     const token = String(code || "").trim();
     if (!isEmail(email)) {
@@ -283,7 +279,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       clearBanner();
 
-      // 코드 검증
       const res = await postJSON(VERIFY_CODE_URL, {
         email: email.trim(),
         code: token,
@@ -299,7 +294,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // 가입 시도
       await signupAfterVerify(email);
     } catch (e) {
       const d = e?.data || {};
@@ -320,13 +314,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (verifyNextBtn) verifyNextBtn.disabled = token.length < 6 || verifying;
   }
 
-  // ===== init =====
+
   const email = getEmailFromContext();
   if (!email) showBanner("이메일 정보가 없습니다. 다시 시도해주세요.");
   if (verifyEmailEl) verifyEmailEl.textContent = email || "";
   restoreCooldown();
 
-  // 첫 진입 자동 발송(쿨다운 없을 때만)
   const until = Number(sessionStorage.getItem(COOLDOWN_KEY) || 0);
   if (email && until <= Date.now()) {
     sendCode(email);
