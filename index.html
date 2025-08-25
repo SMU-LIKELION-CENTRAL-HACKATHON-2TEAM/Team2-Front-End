@@ -1,54 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IEUM</title>
-    <link rel="stylesheet" href="./styles/entire.css" />
-    <link rel="stylesheet" href="./styles/index.css" />
-  </head>
 
-  <body>
-    <div class="main">
-      <div class="content-wrapper">
-        <div class="login-text">
-          <p>장소가 아닌, <span class="highlight">길로</span>.</p>
-          <p><span class="highlight">당신의 여정</span>을 시작해보세요.</p>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IEUM</title>
+  <link rel="stylesheet" href="./styles/entire.css" />
+  <link rel="stylesheet" href="./styles/index.css" />
+</head>
 
-        <div class="login-card">
-          <button class="logo" type="button" id="logo" aria-label="로고">
-            <img src="/images/logo.png" alt="" aria-hidden="true" />
-          </button>
-          <form>
-            <label for="email">이메일</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="이메일을 입력해주세요."
-              required
-            />
+<body>
+  <div class="main">
+    <div class="content-wrapper">
+      <div class="login-text">
+        <p>장소가 아닌, <span class="highlight">길로</span>.</p>
+        <p><span class="highlight">당신의 여정</span>을 시작해보세요.</p>
+      </div>
 
-            <label for="password">비밀번호</label>
-            <input
-              type="password"
-              id="password"
-              placeholder="비밀번호를 입력해주세요."
-              required
-            />
+      <div class="login-card">
+        <button class="logo" type="button" id="logo" aria-label="로고">
+          <img src="/images/logo.png" alt="" aria-hidden="true" />
+        </button>
+        <form>
+          <label for="email">이메일</label>
+          <input type="email" id="email" placeholder="이메일을 입력해주세요." required />
 
-            <button type="submit" class="login-btn">로그인</button>
+          <label for="password">비밀번호</label>
+          <input type="password" id="password" placeholder="비밀번호를 입력해주세요." required />
 
-            <div class="options">
-              <a href="#">비밀번호 변경</a>
-            </div>
+          <button type="submit" class="login-btn">로그인</button>
 
-            <div class="divider"><span>혹은</span></div>
+          <div class="options">
+            <a href="#">비밀번호 변경</a>
+          </div>
 
-            <a href="./pages/signupPage.html" class="signup-btn">회원가입</a>
-          </form>
-        </div>
+          <div class="divider"><span>혹은</span></div>
+
+          <a href="./pages/signupPage.html" class="signup-btn">회원가입</a>
+        </form>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
+<script src="./js/login.js" defer></script>
+
+
 </html>
