@@ -1,29 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("changePassword4.js loaded"); // 로딩 확인용
+  const doneBtn = document.getElementById("doneBtn"); // 버튼 id 명확히
 
-  const backBtn = document.getElementById("backBtn");
-  const nextBtn = document.getElementById("goVerify"); // ID로 정확히 지정
-  const verifyNextBtn = document.getElementById("verifyNext");
-  const codeInput = document.getElementById("code");
-
-  if (backBtn) {
-    backBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      window.location.href = "./changePassword3.html";
-    });
-  }
-
-  if (nextBtn) {
-    nextBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      console.log("next clicked");
-      window.location.href = "../index.html";
-    });
-  }
-
-  if (codeInput && verifyNextBtn) {
-    codeInput.addEventListener("input", () => {
-      verifyNextBtn.disabled = codeInput.value.trim().length !== 6;
-    });
-  }
+  doneBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    // 로그인 화면 또는 홈 화면으로 이동
+    window.location.href = "./login.html";
+  });
 });
