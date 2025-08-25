@@ -64,6 +64,13 @@
   margin: 0 0 16px 0;
 }
 
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
 .signup-card label {
   margin-left: 12px;
   font-size: 13px;
@@ -77,6 +84,10 @@
   border: 0.8px solid #a6aab4;
   border-radius: 8px;
   font-size: 14px;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .signup-card input::placeholder {
@@ -85,6 +96,37 @@
   font-size: 16px;
   line-height: 1.44;
   letter-spacing: -0.02em;
+}
+
+.input-error {
+  border-color: #e11d48 !important;
+}
+
+.field-error {
+  display: none;
+  color: #e11d48;
+  font-size: 12px;
+  line-height: 1.35;
+  margin-left: 4px;
+  margin-top: 5px;
+}
+
+.field-error.show {
+  display: block;
+}
+
+.form-error-banner {
+  display: none;
+  text-align: center;
+  color: #e11d48;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 16px auto 12px;
+  width: 100%;
+  max-width: 360px;
+}
+.form-error-banner.show {
+  display: block;
 }
 
 .next-btn,
@@ -99,18 +141,46 @@
   justify-content: center;
   font-size: 16px;
   color: #fff;
-  background: #d9dbe0;
   cursor: pointer;
   margin: 0 auto;
+  transition: background-color 0.15s ease, filter 0.15s ease,
+    transform 0.06s ease, opacity 0.15s ease;
 }
 
-/* 활성 */
+.next-btn:disabled,
+.submit-btn:disabled {
+  background: #d9dbe0;
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+.next-btn:not(:disabled),
+.submit-btn:not(:disabled) {
+  background: #2a83d7;
+}
+
 .next-btn:hover:not(:disabled),
 .submit-btn:hover:not(:disabled) {
   background: #206cb6;
+  transform: translateY(-1px);
 }
 
-/* 숨겨진 화면 */
+.next-btn:active:not(:disabled),
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
 .hidden {
   display: none;
+}
+
+@media (max-width: 480px) {
+  .signup-card {
+    width: 94vw;
+    padding: 20px;
+  }
+  .next-btn,
+  .submit-btn {
+    width: 100%;
+  }
 }
