@@ -6,6 +6,23 @@
     <title>이메일 인증</title>
     <link rel="stylesheet" href="../styles/entire.css" />
     <link rel="stylesheet" href="../styles/verifyEmail.css" />
+
+    <style>
+      .form-error-banner {
+        display: none;
+        margin: 12px 0;
+        text-align: center;
+        color: #ff4d4f;
+        font-size: 14px;
+      }
+      .form-error-banner.show {
+        display: block;
+      }
+      .resend-link.disabled {
+        pointer-events: none;
+        opacity: 0.6;
+      }
+    </style>
   </head>
   <body>
     <div class="main">
@@ -33,10 +50,12 @@
               <label for="code">인증번호</label>
               <input
                 id="code"
+                name="code"
                 type="text"
-                inputmode="numeric"
-                maxlength="6"
-                placeholder="6자리 인증번호를 입력해주세요."
+                inputmode="text"
+                maxlength="16"
+                autocomplete="one-time-code"
+                placeholder="인증번호를 입력해주세요."
               />
             </div>
 
@@ -44,7 +63,21 @@
               >인증 메일 다시 보내기</a
             >
           </form>
-          <button type="submit" class="submit-btn" id="verifyNext" disabled>
+
+          <div
+            id="verifyBanner"
+            class="form-error-banner"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
+
+          <button
+            type="submit"
+            class="submit-btn"
+            id="verifyNext"
+            form="verifyForm"
+            disabled
+          >
             다음
           </button>
         </div>
